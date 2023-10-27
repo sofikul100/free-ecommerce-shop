@@ -1,23 +1,27 @@
 <script setup>
 import AdminLayout from "../inc/AdminLayout.vue";
-import { Link, router, usePage, useForm, Head } from '@inertiajs/vue3'
-import { defineProps } from "vue"
+import { Link, usePage, Head } from "@inertiajs/vue3";
+import { router, useForm } from "@inertiajs/vue3";
 
-
-const props = defineProps({
-    categorie: Array,
-    errors: Object
-})
-
-const page = usePage();
 
 
 const form = useForm({
-    name: props.categorie.name
-});
+    subcategory_name: '',
+    category_id: ''
+})
 
-const updateCategory = async () => {
-    await router.put('/admin/update/category/' + props.categorie.id, form, {
+const props = defineProps({
+    errors: Object,
+    categories: Array
+})
+
+
+
+
+const page = usePage();
+
+const addSubCategory = async () => {
+    await router.post('/admin/subcateory/add', form, {
         onFinish: () => {
             if (page.props.flash.success) {
                 Swal.fire({
@@ -35,10 +39,15 @@ const updateCategory = async () => {
 }
 
 
+
+
+
+
+
 </script>
 <template>
     <Head>
-        <title>Edit-Category</title>
+        <title>Add-SubCategory</title>
         <meta name="description" content="Your page description">
     </Head>
     <AdminLayout>
@@ -52,10 +61,10 @@ const updateCategory = async () => {
                     </svg>
                     <div class="flex-col ml-[5px] mt-[2px]">
                         <h1 class="font-bold tracking-widest text-[18px] text-blue-600">
-                            Category
+                            Sub-Category
                         </h1>
                         <p class="text-[14px] tracking-widest font-medium">
-                            Category Features
+                            Sub-Category Features
                         </p>
                     </div>
                 </div>
@@ -77,7 +86,7 @@ const updateCategory = async () => {
                                     d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
                             </svg>
                         </span>
-                        <span class="text-[14px] font-medium tracking-widest">Category</span>
+                        <span class="text-[14px] font-medium tracking-widest">Sub-Category</span>
                     </div>
                 </div>
             </div>
@@ -88,28 +97,47 @@ const updateCategory = async () => {
                 <div class="bg-white dark:bg-gray-800 relative shadow-md rounded-sm overflow-hidden">
                     <div class="w-full flex justify-between items-center text-white py-2 px-2 bg-blue-600">
                         <div>
-                            <h1>Edit Category</h1>
+                            <h1>Add New Sub-Category</h1>
                         </div>
                         <div>
-                            <Link href="/admin/category/index"
+                            <Link :href="route('admin.subcategory.index')"
                                 class="bg-white text-black py-1 px-8 tracking-widest rounded-sm hover:bg-gray-700 hover:text-white font-medium transition-all duration-500 ease-in-out">
+
                             Back
                             </Link>
                         </div>
                     </div>
                     <div class="flex-col space-y-3 md:space-y-0 md:space-x-4 p-4">
-                        <form @submit.prevent="updateCategory">
+                        <form @submit.prevent="addSubCategory">
                             <div>
-                                <div class="relative z-0 w-full mb-6 group">
-                                    <input type="text" name="floating_email" v-model="form.name" id="floating_email"
-                                        :class="` ${errors.name ? 'border-rose-500' : ''} block py-2.5 px-0 w-full md:w-[50%] text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer`"
-                                        placeholder=" " />
-                                    <p class="text-rose-500 text-[14px] font-medium" v-if="errors.name">
-                                        {{ errors.name }}
+                                <div class="relative flex flex-col space-y-[10px] z-0 w-full mb-6 group">
+
+                                    <label for="category"
+                                        class="block  text-sm font-medium text-gray-900 dark:text-white">Select Category<span class="text-rose-500">*</span></label>
+                                    <select id="category" v-model="form.category_id"
+                                        :class="`block w-full p-2 mb-6 text-sm md:w-[50%] text-gray-900 border ${errors.category_id ? 'border-rose-500':'border-gray-300'}  rounded-sm bg-gray-50 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`">
+                                        <option value="" selected disabled>Select Category</option>
+                                        <option value="" v-if="categories.length === 0" disabled class="text-rose-500">No Categorie Found</option>
+                                        <option :value="categorie.id" v-else v-for="(categorie, key) in categories" :key="key">{{
+                                            categorie.name }}</option>
+                                    </select>
+                                    <p class="text-rose-500 text-[14px] font-medium" v-if="errors.category_id">
+                                            {{ errors.category_id }}
                                     </p>
-                                    <label for="floating_email"
-                                        class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Category
-                                        Name</label>
+                                </div>
+                                <div class="relative z-0 w-full mb-6 group">
+                                    <div class="mb-6">
+                                        <label for="subcategory_name"
+                                            class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Subcategory Name<span class="text-rose-500">*</span></label>
+                                        <input type="text" id="subcategory_name"
+                                            v-model="form.subcategory_name"
+                                            :class="`bg-gray-50 border ${errors.subcategory_name ? 'border-rose-500':'border-gray-300'}  md:w-[50%] text-gray-900 text-sm rounded-sm focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500`"
+                                            placeholder="Subcategory Name....">
+                                        <p class="text-rose-500 text-[14px] font-medium" v-if="errors.subcategory_name">
+                                            {{ errors.subcategory_name }}
+                                        </p>
+                                    </div>
+                                   
                                 </div>
                             </div>
                             <button type="submit"
@@ -117,12 +145,11 @@ const updateCategory = async () => {
                                 <span>
                                     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                         class="w-4 h-4">
-                                        <path fill-rule="evenodd"
-                                            d="M10 18a8 8 0 100-16 8 8 0 000 16zM6.75 9.25a.75.75 0 000 1.5h4.59l-2.1 1.95a.75.75 0 001.02 1.1l3.5-3.25a.75.75 0 000-1.1l-3.5-3.25a.75.75 0 10-1.02 1.1l2.1 1.95H6.75z"
-                                            clip-rule="evenodd" />
+                                        <path
+                                            d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
                                     </svg>
                                 </span>
-                                &nbsp;Update Now
+                                Add Now
                             </button>
                         </form>
                     </div>

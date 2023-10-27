@@ -1,7 +1,7 @@
 <script setup>
 import AdminLayout from "../inc/AdminLayout.vue";
-import { Head, Link, usePage } from "@inertiajs/vue3";
-import { router,useForm } from "@inertiajs/vue3";
+import {Link, usePage,Head} from "@inertiajs/vue3";
+import { router, useForm } from "@inertiajs/vue3";
 import { reactive } from "vue";
 
 
@@ -19,18 +19,18 @@ const addCategory = async () => {
 
     await router.post('/admin/add/category', form, {
         onFinish: () => {
-            if(page.props.flash.success){
+            if (page.props.flash.success) {
                 Swal.fire({
-               toast:true,
-               icon:'success',
-               position:'top-end',
-               timer: 3000,
-               showConfirmButton:false,
-               timerProgressBar:true,
-               title:page.props.flash.success
-            });
+                    toast: true,
+                    icon: 'success',
+                    position: 'top-end',
+                    timer: 3000,
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                    title: page.props.flash.success
+                });
             }
-            
+
         }
     });
 }
@@ -43,6 +43,10 @@ const addCategory = async () => {
 
 </script>
 <template>
+    <Head>
+        <title>Add-Category</title>
+        <meta name="description" content="Your page description">
+    </Head>
     <AdminLayout>
         <section class="bg-white shadow-lg border mb-2 py-[8px]">
             <div class="hidden sm:flex items-center justify-between px-2">

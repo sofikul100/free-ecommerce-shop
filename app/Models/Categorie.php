@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\SubCategorie;
 use Carbon\Carbon;
 class Categorie extends Model
 {
@@ -30,4 +31,11 @@ class Categorie extends Model
     public function getUpdatedAtAttribute(){
         return  Carbon::parse($this->attributes['updated_at'])->diffForHumans();
     }
+
+    public function subcategory(){
+        return $this->hasMany(SubCategorie::class,'category_id','id');
+    }
+     
+    
+    
 }

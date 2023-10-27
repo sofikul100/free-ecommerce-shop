@@ -3,7 +3,9 @@
 use App\Http\Controllers\Admin\AdminAuthController;
 use App\Http\Controllers\Admin\AdminController;
 use App\Http\Controllers\Admin\Category;
+use App\Http\Controllers\Admin\SubCategoryController;
 use App\Http\Controllers\ProfileController;
+use App\Models\SubCategorie;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -64,6 +66,12 @@ Route::middleware(['auth','isAdmin'])->prefix('admin')->group(function (){
     Route::delete('/delete/category/{category_id}',[Category::class,'delete_category'])->name('admin.delete.category');
 
     //=======sub category rutes=====//
+    Route::get('/subcategory/index',[SubCategoryController::class,'index'])->name('admin.subcategory.index');
+    Route::get('/subcategory/addForm',[SubCategoryController::class,'addSubCategoryForm'])->name('admin.add.subcategory.form');
+    Route::post('/subcateory/add',[SubCategoryController::class,'addSubCategory'])->name('admin.add.subcategory');
+    Route::get('/subcategory/edit/form/{subcategory_id}',[SubCategoryController::class,'editSubcategoryForm'])->name('admin.edit.subcategory.form');
+    Route::put('/update/subcategory/{subcategory_id}',[SubCategoryController::class,'updateSubCategory'])->name('admin.update.subcategory');
+    Route::delete('/subcategory/delete/{subcategory_id}',[SubCategoryController::class,'deleteSubCategory'])->name('admin.delete.subcategory');
 });
 
 //============end==========//

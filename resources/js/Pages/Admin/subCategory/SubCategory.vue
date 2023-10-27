@@ -3,33 +3,46 @@ import AdminLayout from "../inc/AdminLayout.vue";
 import { Link, router, usePage,Head } from '@inertiajs/vue3'
 import { ref, watch } from "vue"
 const props = defineProps({
-    categories: Object,
-    totalData: Number,
-    filters: Array
+    subcategories:Object,
+    total_subcategories:Number,
+    filters:Array
 });
+
+
+
 
 const page = usePage();
 
+
 const search = ref(props.filters.search);
-const perPage = ref(props.filters.perPage);
+const perPage = ref(5);
 
-watch(search, (value) => {
-    router.get("/admin/category/index", { search: value }, {
-        preserveState: true,
-        replace: true
-    })
+
+//search functionlity code=====//
+watch(search,(value) =>{
+   router.get('/admin/subcategory/index',{search:value},{
+      preserveState:true,
+      replace:true
+   })
+});
+//end
+
+//perpage functionlity code 
+watch(perPage,(value) =>{
+   router.get('/admin/subcategory/index',{perPage:value},{
+        preserveState:true,
+        replace:true
+   });
 });
 
-watch(perPage, (value) => {
-    router.get("/admin/category/index", { perPage: value }, {
-        preserveState: true,
-        replace: true
-    })
-});
 
 
+//end
+
+
+//delete single data========//
 // for delete
-const deleteCategory = (id) => {
+const deleteSubCategory = (id) => {
     Swal.fire({
         title: 'Are you sure?',
         text: "You won't be able to revert this!",
@@ -40,7 +53,7 @@ const deleteCategory = (id) => {
         confirmButtonText: 'Yes, delete it!'
     }).then((result) => {
         if (result.isConfirmed) {
-            router.delete('/admin/delete/category/' + id, {
+            router.delete('/admin/subcategory/delete/' + id, {
                 onFinish: () => {
                     if (page.props.flash.success) {
                         Swal.fire({
@@ -62,10 +75,12 @@ const deleteCategory = (id) => {
 
 
 
+
+
 </script>
 <template>
     <Head>
-        <title>Category</title>
+        <title>Sub-Category</title>
         <meta name="description" content="Your page description">
     </Head>
     <AdminLayout>
@@ -79,10 +94,10 @@ const deleteCategory = (id) => {
                     </svg>
                     <div class="flex-col ml-[5px] mt-[2px]">
                         <h1 class="font-bold tracking-widest text-[18px] text-blue-600">
-                            Category
+                            Sub-Category
                         </h1>
                         <p class="text-[14px] tracking-widest font-medium">
-                            Category Features
+                            Sub-Category Features
                         </p>
                     </div>
                 </div>
@@ -104,7 +119,7 @@ const deleteCategory = (id) => {
                                     d="M15.75 17.25v3.375c0 .621-.504 1.125-1.125 1.125h-9.75a1.125 1.125 0 01-1.125-1.125V7.875c0-.621.504-1.125 1.125-1.125H6.75a9.06 9.06 0 011.5.124m7.5 10.376h3.375c.621 0 1.125-.504 1.125-1.125V11.25c0-4.46-3.243-8.161-7.5-8.876a9.06 9.06 0 00-1.5-.124H9.375c-.621 0-1.125.504-1.125 1.125v3.5m7.5 10.375H9.375a1.125 1.125 0 01-1.125-1.125v-9.25m12 6.625v-1.875a3.375 3.375 0 00-3.375-3.375h-1.5a1.125 1.125 0 01-1.125-1.125v-1.5a3.375 3.375 0 00-3.375-3.375H9.75" />
                             </svg>
                         </span>
-                        <span class="text-[14px] font-medium tracking-widest">Category</span>
+                        <span class="text-[14px] font-medium tracking-widest">SubCategory</span>
                     </div>
                 </div>
             </div>
@@ -114,7 +129,7 @@ const deleteCategory = (id) => {
                 <!-- Start coding here -->
                 <div class="bg-white dark:bg-gray-800 relative shadow-md rounded-sm overflow-hidden">
                     <div class="w-full text-white py-2 px-2 bg-blue-600">
-                        <h1>Manage Category</h1>
+                        <h1>Manage Sub-Category</h1>
                     </div>
                     <div
                         class="flex flex-col md:flex-row items-center justify-between space-y-3 md:space-y-0 md:space-x-4 p-4">
@@ -138,14 +153,14 @@ const deleteCategory = (id) => {
                         </div>
                         <div
                             class="w-full md:w-auto flex flex-col md:flex-row space-y-2 md:space-y-0 items-stretch md:items-center justify-end md:space-x-3 flex-shrink-0">
-                            <Link href="/admin/add/category/form" type="button"
+                            <Link :href="route('admin.add.subcategory.form')" type="button"
                                 class="flex items-center justify-center text-white rounded-sm bg-blue-700 hover:text-gray-900 hover:bg-white hover:border hover:border-blue-700   font-medium text-sm px-4 py-2 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                             <svg class="h-3.5 w-3.5 mr-2" fill="currentColor" viewbox="0 0 20 20"
                                 xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
                                 <path clip-rule="evenodd" fill-rule="evenodd"
                                     d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" />
                             </svg>
-                            Add Category
+                            Add Sub-Category
                             </Link>
                             <div class="flex items-center space-x-3 w-full md:w-auto">
 
@@ -214,13 +229,10 @@ const deleteCategory = (id) => {
                                         CATEGORY NAME
                                     </th>
                                     <th scope="col" class="px-4 py-3 font-bold text-[#fff] text-[14px]">
-                                        CATEGORY SLUG
+                                        SUBCATEGORY-NAME
                                     </th>
                                     <th scope="col" class="px-4 py-3 font-bold text-[#fff] text-[14px]">
-                                        CREATED AT
-                                    </th>
-                                    <th scope="col" class="px-4 py-3 font-bold text-[#fff] text-[14px]">
-                                        UPDATED AT
+                                        SUBCATEGORY-SLUG
                                     </th>
                                     <th scope="col" class="px-4 py-3 font-bold text-[#fff] text-[14px]">
                                         ACTIONS
@@ -228,18 +240,18 @@ const deleteCategory = (id) => {
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-for="(categorie, key) in props.categories.data" :key="categorie.id"
+                                <tr  
+                                   v-for="(subcategorie,key) in props.subcategories.data" :key="key"
                                     class="border-b dark:border-gray-700">
                                     <th scope="row"
                                         class="px-4 py-3 font-medium text-gray-900 whitespace-nowrap dark:text-white">
                                         {{ key + 1 }}
                                     </th>
-                                    <td class="px-4 py-3">{{ categorie.name }}</td>
-                                    <td class="px-4 py-3">{{ categorie.category_slug }}</td>
-                                    <td class="px-4 py-3 font-bold"> {{ categorie.created_at }}</td>
-                                    <td class="px-4 py-3 font-bold"> {{ categorie.updated_at }}</td>
+                                    <td class="px-4 py-3 "><span class="">--{{ subcategorie.category.name }}--</span></td> 
+                                    <td class="px-4 py-3">{{ subcategorie.subcategory_name }}</td>
+                                    <td class="px-4 py-3 font-bold"> {{ subcategorie.subcategory_slug }} </td>
                                     <td class="px-4 py-3 flex items-center space-x-2 space-y-0">
-                                        <Link :href="route('admin.edit.category.form', categorie.id)"
+                                        <Link :href="route('admin.edit.subcategory.form', subcategorie.id)"
                                             class="bg-fuchsia-700 text-white hover:bg-fuchsia-900 px-1 py-1 rounded-sm">
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                             class="w-4 h-4">
@@ -249,7 +261,8 @@ const deleteCategory = (id) => {
                                                 d="M3.5 5.75c0-.69.56-1.25 1.25-1.25H10A.75.75 0 0010 3H4.75A2.75 2.75 0 002 5.75v9.5A2.75 2.75 0 004.75 18h9.5A2.75 2.75 0 0017 15.25V10a.75.75 0 00-1.5 0v5.25c0 .69-.56 1.25-1.25 1.25h-9.5c-.69 0-1.25-.56-1.25-1.25v-9.5z" />
                                         </svg>
                                         </Link>
-                                        <button @click="deleteCategory(categorie.id)"
+                                        <button 
+                                            @click="deleteSubCategory(subcategorie.id)"
                                             class="bg-rose-700 text-white hover:bg-rose-900 px-1 py-1 rounded-sm">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
                                                 class="w-4 h-4">
@@ -267,10 +280,10 @@ const deleteCategory = (id) => {
                         aria-label="Table navigation">
                         <span class="text-sm  text-gray-900 font-bold dark:text-gray-900">
                             Total Data :
-                            <span class="font-semibold text-gray-900 dark:text-white">{{ props.totalData }}</span>
+                            <span class="font-semibold text-gray-900 dark:text-white">{{ props.total_subcategories }}</span>
                         </span>
                         <div class="flex justify-end space-x-2">
-                            <div v-for="(link, key) in props.categories.links" :key="key">
+                            <div v-for="(link, key) in props.subcategories.links" :key="key">
                                 <div v-if="link.url == null" v-html="link.label"></div>
                                 <Link v-else :href="link.url" v-html="link.label"
                                     :class="{ 'bg-blue-600   font-bold  text-white': link.active }"
